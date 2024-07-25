@@ -1,0 +1,562 @@
+{
+	"info": {
+		"_postman_id": "27f2bfb0-daf2-4fa2-a335-bffcc8afa758",
+		"name": "store_app_collection",
+		"description": "Базовая коллекция приложения store. По большей части из всех запросов здесь только CRUD запросы.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36871754"
+	},
+	"item": [
+		{
+			"name": "First Folder",
+			"item": [
+				{
+					"name": "categoryController",
+					"item": [
+						{
+							"name": "Get All Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Тестируем статус ответа и формат\r",
+											"pm.test(\"Status is ok, response is json\", function () {\r",
+											"    pm.response.to.be.ok; // проверка статуса\r",
+											"    pm.response.to.be.json; // проверка формата\r",
+											"});\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{cat}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"var response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"category_id\", response.id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"{{category_name}}\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{cat}}/category/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{cat}}/{{category_id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category by Name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{cat}}/name/{{category_name}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful PUT request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"{{up_category_name}}\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}{{cat}}/category/update?id={{category_id}}",
+									"host": [
+										"{{url}}{{cat}}"
+									],
+									"path": [
+										"category",
+										"update"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{category_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful DELETE request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url}}{{cat}}/category/delete/{{category_id}}",
+								"description": "Нельзя удалить категорию, пока существуют связанные с ней продукты. Сперва нужно удалить все продукты."
+							},
+							"response": []
+						}
+					],
+					"description": "Api controller for categories"
+				},
+				{
+					"name": "productController",
+					"item": [
+						{
+							"name": "Get All Products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{prod}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"product_id\", response.id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"name\": \"{{product_name}}\",\r\n        \"sku\": \"352\",\r\n        \"description\": \"Good Phone\",\r\n        \"category\": {\r\n            \"id\": \"{{category_id}}\"\r\n        },\r\n        \"price\": 1,\r\n        \"quantity\": 1,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}\r\n    ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{prod}}/product/create",
+								"description": "При создании продукта автоматически создаётся поставка, которая никак не отлавливается Postman. На данный момент поставку придётся удалять его вручную."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{prod}}/{{product_id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful PUT request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"name\": \"{{up_product_name}}\",\r\n        \"sku\": \"12\",\r\n        \"description\": \"Good Phone\",\r\n        \"category\": {\r\n            \"id\": \"{{category_id}}\"\r\n        },\r\n        \"price\": 1,\r\n        \"quantity\": 1,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}{{prod}}/product/update?id={{product_id}}",
+									"host": [
+										"{{url}}{{prod}}"
+									],
+									"path": [
+										"product",
+										"update"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{product_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful DELETE request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url}}{{prod}}/product/delete/{{product_id}}",
+								"description": "Нельзя удалить продукт, пока существуют связанные с ней поставки. Сперва нужно удалить все продукты."
+							},
+							"response": []
+						}
+					],
+					"description": "Api controller for products"
+				},
+				{
+					"name": "stock_mvController",
+					"item": [
+						{
+							"name": "Get All Stocks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{stock}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Stock",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"stock_mv_id\", response.id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"product\": { \"id\": \"{{product_id}}\"},\r\n        \"quantity\": 69,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}\r\n    ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{stock}}/stock/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Stock by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{stock}}/{{stock_mv_id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Stock",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful PUT request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"product\": { \"id\": {{product_id}}},\r\n        \"quantity\": 38,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}{{stock}}/stock/update?id={{stock_id}}",
+									"host": [
+										"{{url}}{{stock}}"
+									],
+									"path": [
+										"stock",
+										"update"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{stock_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Stock",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful DELETE request\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url}}{{stock}}/stock/delete/{{stock_mv_id}}"
+							},
+							"response": []
+						}
+					],
+					"description": "Api controller for stock movements"
+				},
+				{
+					"name": "storeController",
+					"item": [
+						{
+							"name": "Main Page",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8080"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Page",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8080/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Category Page",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8080/category/edit/{{category_id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Product Page",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8080/product/edit/{{product_id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Stock Page",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8080/stock_mv/edit/{{stock_mv_id}}"
+							},
+							"response": []
+						}
+					],
+					"description": "Web-site's views"
+				},
+				{
+					"name": "Simple Test Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
