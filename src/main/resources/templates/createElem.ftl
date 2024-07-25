@@ -1,14 +1,15 @@
 <#include "layout.ftl">
 <#macro block name="content">
    <h1>Create category</h1>
-       <form action="/category/create" method="post">
-           <label for="categoryName">Category Name:</label>
-           <input type="text" id="categoryName" name="name" required>
-           <button type="submit">Create Category</button>
+
+       <form id="categoryForm">
+              <label for="categoryName">Category Name:</label>
+              <input type="text" id="categoryName" name="name" required>
+              <button type="submit">Create Category</button>
        </form>
 
        <h1>Create product</h1>
-       <form action="/product/create" method="post">
+       <form id="productForm">
            <label for="productName">Product Name:</label>
            <input type="text" id="productName" name="name" required>
            <br>
@@ -21,9 +22,10 @@
            <label for="category">Category:</label>
            <select id="category" name="category">
                <#list categories as category>
-                   <option value="${category.id}">${category.name}</option>
+                   <option value="${category.id}" data-name="${category.name}">${category.name}</option>
                </#list>
            </select>
+           <input type="hidden" id="categoryName" name="categoryName">
            <br>
            <label for="price">Price:</label>
            <input type="text" id="price" name="price" required>
@@ -37,7 +39,7 @@
        </form>
 
        <h1>Create stock movement</h1>
-       <form action="/stock-movement/create" method="post">
+       <form id="stockMovementForm">
            <label for="product">Product:</label>
            <select id="product" name="product">
                <#list products as product>
@@ -45,8 +47,8 @@
                </#list>
            </select>
            <br>
-           <label for="quantity">Quantity:</label>
-           <input type="number" id="quantity" name="quantity" required>
+           <label for="quantity_stock">Quantity:</label>
+           <input type="number" id="quantity_stock" name="quantity_stock" required>
            <br>
            <label for="movementType">Movement Type:</label>
            <select id="movementType" name="movementType">
@@ -58,4 +60,6 @@
            <input type="datetime-local" id="movementDate" name="movementDate" required>
            <button type="submit">Create Stock Movement</button>
        </form>
+
+       <script src="/js/createElem.js"></script>
 </#macro>

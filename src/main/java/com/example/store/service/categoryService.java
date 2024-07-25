@@ -23,7 +23,9 @@ public class categoryService {
     public category getCategoryById(UUID id) {
         return ctRep.findById(id).orElse(null);
     }
-
+    public category getCategoryByName(String name) {
+        return ctRep.findByName(name).orElse(null);
+    }
 
     public category createCategory(category ct) {
         return ctRep.save(ct);
