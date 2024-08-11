@@ -16,3 +16,14 @@
 (В окне инструментов IntelliJ IDEA)
 
 Имеется простая коллекция запросов postman в папке others.
+
+Docker.
+Перед выполнением команды "docker compose up" в директории src/main/docker выполните следующее:
+Выполните команду "mvn clean"
+Выполните команду "mvn install"
+В директории target скопируйте/перенесите файл store-0.0.2-SNAPSHOT.jar
+в в директорию src/main/docker.
+
+Можете выполнить команду "docker compose up"
+
+При этом автоматически создаётся volume "docker_store_db".

@@ -1,5 +1,7 @@
-/** JavaScript для создания сущностей
+/** FRONTEND ЧАСТЬ
+JavaScript для создания сущностей
 createElem.ftl использует функции этого скрипта
+Обмен происходит по Data Transfer Object
 */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -54,9 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             name: productName,
                             sku: productSku,
                             description: productDescription,
-                            category: {
-                                id: productCategoryId
-                            },
+                            category_id: productCategoryId,
                             price: productPrice,
                             quantity: productQuantity,
                             lastQuantityUpdate: productCreatedAt,
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    product: { id: product },
+                    product_id: product,
                     quantity: quantity,
                     movementType: movementType,
                     movementDate: movementDate

@@ -1,13 +1,13 @@
 package com.example.store.controller.api;
 
+import com.example.store.dto.categoryDTO;
+import com.example.store.interfaces.apiInterfaceCRUD;
 import com.example.store.model.category;
 import com.example.store.service.categoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @class category
@@ -16,50 +16,70 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/categories")
-public class categoryController {
+public class categoryController implements apiInterfaceCRUD<categoryDTO>{
 
     private final categoryService ctService;
 
-
-    @Autowired
     public categoryController(categoryService ctService) {
         this.ctService = ctService;
     }
 
     @GetMapping("")
     @ResponseBody
-    public List<category> getAllCategories() {
-        return ctService.getAllCategories();
+    public List<categoryDTO> getAllEntities() {
+        return ctService.getAllCategories().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public category getCategoryById(@PathVariable UUID id) {
-        return ctService.getCategoryById(id);
+    public categoryDTO getEntityById(@PathVariable UUID id) {
+        category cat = ctService.getCategoryById(id);
+        return convertToDTO(cat);
     }
-
-    @GetMapping("/name/{name}")
-    @ResponseBody
-    public category getCategoryByName(@PathVariable String name) {
-        return ctService.getCategoryByName(name);
-    }
-
 
     @PostMapping("/category/create")
-    public category createCategory(@RequestBody category requestCategory) {
-        return ctService.createCategory(requestCategory);
+    public categoryDTO createEntity(@RequestBody categoryDTO requestCategoryDTO) {
+        category newCategory = convertToEntity(requestCategoryDTO);
+        category createdCategory = ctService.createCategory(newCategory);
+        return convertToDTO(createdCategory);
     }
 
     @DeleteMapping("/category/delete/{id}")
-    public void deleteCategory(@PathVariable UUID id) {
+    public void deleteEntity(@PathVariable UUID id) {
         ctService.deleteCategory(id);
     }
 
     @PutMapping("/category/update")
-    public category updateCategory(@RequestParam UUID id,
-                                   @RequestBody category requestCategory) {
-        category cat = ctService.getCategoryById(id);
-        cat.setName(requestCategory.getName());
-        return ctService.updateCategory(cat);
+    public categoryDTO updateEntity(@RequestParam UUID id,
+                                    @RequestBody categoryDTO requestCategoryDTO) {
+        category updatedCategory = convertToEntity(requestCategoryDTO);
+        updatedCategory.setId(id);
+        updatedCategory = ctService.updateCategory(updatedCategory);
+        return convertToDTO(updatedCategory);
+    }
+
+    @GetMapping("/name/{name}")
+    @ResponseBody
+    public categoryDTO getCategoryByName(@PathVariable String name) {
+        category cat = ctService.getCategoryByName(name);
+        return convertToDTO(cat);
+    }
+
+    // Метод для конвертации из category в categoryDTO
+    private categoryDTO convertToDTO(category cat) {
+        return categoryDTO.builder()
+                .id(cat.getId())
+                .name(cat.getName())
+                .build();
+    }
+
+    // Метод для конвертации из categoryDTO в category
+    private category convertToEntity(categoryDTO catDTO) {
+        category cat = new category();
+        cat.setName(catDTO.getName());
+        return cat;
     }
 }
+

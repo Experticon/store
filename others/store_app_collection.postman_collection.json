@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "First Folder",
+			"name": "CRUD methods",
 			"item": [
 				{
 					"name": "categoryController",
@@ -239,7 +239,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"name\": \"{{product_name}}\",\r\n        \"sku\": \"352\",\r\n        \"description\": \"Good Phone\",\r\n        \"category\": {\r\n            \"id\": \"{{category_id}}\"\r\n        },\r\n        \"price\": 1,\r\n        \"quantity\": 1,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}\r\n    ",
+									"raw": "{\r\n        \"name\": \"{{product_name}}\",\r\n        \"sku\": \"352\",\r\n        \"description\": \"Good Phone\",\r\n        \"category_id\":\"{{category_id}}\",\r\n        \"price\": 2,\r\n        \"quantity\": 10,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}\r\n    ",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -287,7 +287,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"name\": \"{{up_product_name}}\",\r\n        \"sku\": \"12\",\r\n        \"description\": \"Good Phone\",\r\n        \"category\": {\r\n            \"id\": \"{{category_id}}\"\r\n        },\r\n        \"price\": 1,\r\n        \"quantity\": 1,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}",
+									"raw": "{\r\n        \"name\": \"{{up_product_name}}\",\r\n        \"sku\": \"12\",\r\n        \"description\": \"Good Phone\",\r\n        \"category_id\":\"{{category_id}}\",\r\n        \"price\": 12,\r\n        \"quantity\": 1,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -383,7 +383,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"product\": { \"id\": \"{{product_id}}\"},\r\n        \"quantity\": 69,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}\r\n    ",
+									"raw": "{\r\n        \"product_id\": \"{{product_id}}\",\r\n        \"quantity\": 30,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}\r\n    ",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -430,7 +430,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"product\": { \"id\": {{product_id}}},\r\n        \"quantity\": 38,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}",
+									"raw": "{\r\n        \"product_id\": \"{{product_id}}\",\r\n        \"quantity\": 10,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -438,7 +438,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}{{stock}}/stock/update?id={{stock_id}}",
+									"raw": "{{url}}{{stock}}/stock/update?id={{stock_mv_id}}",
 									"host": [
 										"{{url}}{{stock}}"
 									],
@@ -449,7 +449,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "{{stock_id}}"
+											"value": "{{stock_mv_id}}"
 										}
 									]
 								}
@@ -557,6 +557,140 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Fast Create",
+			"item": [
+				{
+					"name": "Create Category Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"category_id\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"{{category_name}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{cat}}/category/create"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"product_id\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"{{product_name}}\",\r\n        \"sku\": \"352\",\r\n        \"description\": \"Good Phone\",\r\n        \"category_id\":\"{{category_id}}\",\r\n        \"price\": 2,\r\n        \"quantity\": 10,\r\n        \"lastQuantityUpdate\": \"2024-07-02T00:52:00\",\r\n        \"createdAt\": \"2024-07-01T00:52:00\"\r\n}\r\n    ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{prod}}/product/create",
+						"description": "При создании продукта автоматически создаётся поставка, которая никак не отлавливается Postman. На данный момент поставку придётся удалять его вручную."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stock Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"stock_mv_id\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"product_id\": \"{{product_id}}\",\r\n        \"quantity\": 30,\r\n        \"movementType\": \"IN\",\r\n        \"movementDate\": \"2024-07-11T20:46:00\"\r\n}\r\n    ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{stock}}/stock/create"
+					},
+					"response": []
+				}
+			],
+			"description": "Быстро создаёт категорию, продукт и поставку."
 		}
 	]
 }

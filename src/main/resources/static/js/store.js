@@ -1,7 +1,9 @@
-/** JavaScript для отображения сущностей на главной странице.
+/** FRONTEND ЧАСТЬ
+JavaScript для отображения сущностей на главной странице.
 Также скрипт отвечает за обработку удаления сущностей и перессылку на их страницы
 изменения.
 store.ftl использует функции этого скрипта
+Обмен происходит по Data Transfer Object
 */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -41,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         throw new Error(errorData.message || 'Unknown error occurred');
                     });
                 }
-                return response.json();
             })
         .then(() => {
             fetchCategories();
@@ -61,7 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-// Остальные функции имеют примерно такую же структуру.
+
+
+// Отдельный запрос для получения категории по id в productDTO.
+function getCategoryById(categoryId) {
+    return fetch(`/api/categories/${categoryId}`)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching category:', error);
+        });
+}
 
     // Function to fetch and display products
     function fetchProducts() {
@@ -76,12 +86,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     row.insertCell(1).innerText = product.name;
                     row.insertCell(2).innerText = product.sku;
                     row.insertCell(3).innerText = product.description;
-                    row.insertCell(4).innerText = product.category.name;
+                    const categoryCell = row.insertCell(4);
+                                    categoryCell.innerText = 'Loading...'; // Предварительное значение
+                                    // Асинхронно получаем категорию и обновляем ячейку
+                                    getCategoryById(product.category_id)
+                                        .then(category => {
+                                            categoryCell.innerText = category ? category.name : 'Unknown';
+                                        });
                     row.insertCell(5).innerText = product.price;
-                    row.insertCell(6).innerText = product.quantity;
-                    row.insertCell(7).innerText = product.lastQuantityUpdate;
-                    row.insertCell(8).innerText = product.createdAt;
-                    const actionsCell = row.insertCell(9);
+                    row.insertCell(6).innerText = product.real_price;
+                    row.insertCell(7).innerText = product.quantity;
+                    row.insertCell(8).innerText = product.lastQuantityUpdate;
+                    row.insertCell(9).innerText = product.createdAt;
+                    const actionsCell = row.insertCell(10);
                     actionsCell.innerHTML = `
                         <button class="delete-product-button" data-id="${product.id}">Delete</button>
                         <form action="/product/edit/${product.id}" method="get">
@@ -106,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 throw new Error(errorData.message || 'Unknown error occurred');
                             });
                         }
-                        return response.json();
                     })
         .then(() => {
             fetchProducts(); // Refresh the products list after deletion
@@ -124,29 +140,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+// Отдельный запрос для получения продукта по id в stock_mvDTO.
+function getProductById(productId) {
+    return fetch(`/api/products/${productId}`)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching product:', error);
+        });
+}
+
     // Function to fetch and display stock movements
     function fetchStockMovements() {
         fetch('/api/stock_mv')
             .then(response => response.json())
             .then(data => {
                 const stockMvTableBody = document.getElementById('stock-mv-table').getElementsByTagName('tbody')[0];
-                stockMvTableBody.innerHTML = ''; // Clear the table body
+                stockMvTableBody.innerHTML = ''; // Очистить тело таблицы
                 data.forEach(stockMv => {
                     const row = stockMvTableBody.insertRow();
                     row.insertCell(0).innerText = stockMv.id;
-                    row.insertCell(1).innerText = stockMv.product.name;
+                    const productCell = row.insertCell(1);
+                    productCell.innerText = 'Loading...'; // Предварительное значение
+
+                    getProductById(stockMv.product_id)
+                        .then(product => {
+                            productCell.innerText = product ? product.name : 'Unknown';
+                        });
+
                     row.insertCell(2).innerText = stockMv.quantity;
                     row.insertCell(3).innerText = stockMv.movementType;
                     row.insertCell(4).innerText = stockMv.movementDate;
+
                     const actionsCell = row.insertCell(5);
                     actionsCell.innerHTML = `
-                            <button class="delete-stock-button" data-id="${stockMv.id}">Delete</button>
+                        <button class="delete-stock-button" data-id="${stockMv.id}">Delete</button>
                         <form action="/stock_mv/edit/${stockMv.id}" method="get">
-                             <button type="submit">Edit</button>
+                            <button type="submit">Edit</button>
                         </form>
                     `;
                 });
-                attachStocksEventListeners();
+                attachStocksEventListeners(); // Привязать обработчики событий к новым кнопкам
             })
             .catch(error => console.error('Error fetching stock movements:', error));
     }
@@ -162,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     throw new Error(errorData.message || 'Unknown error occurred');
                                 });
                             }
-                            return response.json();
                         })
             .then(() => {
                 fetchStockMovements(); // Refresh the products list after deletion

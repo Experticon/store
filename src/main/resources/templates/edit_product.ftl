@@ -12,8 +12,13 @@
         <label for="description">Description:</label>
         <textarea id="description" name="description">${product.description}</textarea>
         <br>
+
         <label for="category">Category:</label>
-        <input type="text" id="category" name="category" value="${product.category.id}">
+        <select id="category" name="category">
+                    <#list categories as cat>
+                        <option value="${cat.id}" <#if cat.id == product.category.id>selected</#if>>${cat.name}</option>
+                    </#list>
+                </select>
         <br>
         <label for="price">Price:</label>
         <input type="text" id="price" name="price" value="${product.price}">

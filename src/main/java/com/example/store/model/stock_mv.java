@@ -1,5 +1,7 @@
 package com.example.store.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -39,9 +41,11 @@ public class stock_mv {
     private product product;
 
     @Column(nullable = false)
+    @Min(value=1, message = "Minimum quantity is 1")
     private int quantity;
 
     @Column(name = "movement_type", nullable = false)
+    @NotBlank(message = "Movement type can't be empty or blank")
     private String movementType;
 
     @Column(name = "movement_date", nullable = false)

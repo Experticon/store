@@ -1,6 +1,8 @@
 package com.example.store.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,9 +46,11 @@ public class product {
     private UUID id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Name can't be empty or blank")
     private String name;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "SKU can't be empty or blank")
     private String sku;
 
     @Column(columnDefinition = "TEXT")
@@ -57,9 +61,11 @@ public class product {
     private category category;
 
     @Column(nullable = false)
+    @Min(value=1, message = "Minimum price is 1")
     private BigDecimal price;
 
     @Column(nullable = false)
+    @Min(value=0, message = "Minimum quantity is 0")
     private int quantity;
 
     @Column(name = "last_quantity_update", nullable = false)

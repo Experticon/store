@@ -1,8 +1,10 @@
-/** JavaScript для изменения сущностей
+/** FRONTEND ЧАСТЬ
+JavaScript для изменения сущностей
 Файлы, использующие этот скрипт:
 edit_category.ftl
 edit_edit_product.ftl
 edit_stock_mv.ftl
+Обмен происходит по Data Transfer Object
 */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -56,9 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         name: productName,
                         sku: productSku,
                         description: productDescription,
-                        category: {
-                            id: productCategory
-                        },
+                        category_id: productCategory,
                         price: productPrice,
                         quantity: productQuantity
                     })
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        product: { id: productId },
+                        product_id: productId,
                         quantity: quantity,
                         movementType: movementType,
                         movementDate: movementDate

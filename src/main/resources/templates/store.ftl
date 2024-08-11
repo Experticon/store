@@ -25,6 +25,7 @@
                 <th>Description</th>
                 <th>Category</th>
                 <th>Price</th>
+                <th>Real Price</th>
                 <th>Quantity</th>
                 <th>Last Quantity Update</th>
                 <th>Created At</th>
